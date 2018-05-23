@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "206357316448",
+    "firebase_url": "https://jacky-bfdd4.firebaseio.com",
+    "project_id": "jacky-bfdd4",
+    "storage_bucket": "jacky-bfdd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206357316448:android:f3d8f1aa19c9e99c",
+        "android_client_info": {
+          "package_name": "com.chatbot.jacky"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206357316448-oiod0l7d391r7l0nbunb37h6nsscidjf.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "206357316448-aj5thi6nigt9ieje41s8nifbs7ciesn2.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "206357316448-aj5thi6nigt9ieje41s8nifbs7ciesn2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF_d0KNpjVsZLq5Ns22yFblV5AdHeNK3k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
