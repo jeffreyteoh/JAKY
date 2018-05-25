@@ -3,16 +3,29 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Home</ion-title>
+    <ion-title>Jacky</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h3>Ionic Menu Starter</h3>
+  <!--<h3>Ionic Menu Starter</h3>-->
 
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
+  <!--<p>-->
+    <!--If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.-->
+  <!--</p>-->
 
-  <button ion-button secondary menuToggle>Toggle Menu</button>
+  <!--<button ion-button secondary menuToggle>Toggle Menu</button>-->
+  <div *ngIf="showWelcome">
+    <h2> Welcome,  {{ userName}} !</h2>
+  </div>
+  <div id="login" *ngIf="showLogin">
+    <div id="third-party">
+      <h5> Sign in with </h5>
+      <button ion-button secondary icon-start (click)="googleLogin()">
+        <ion-icon name="logo-google"></ion-icon>
+        Google
+      </button>
+    </div>
+  </div>
+
 </ion-content>

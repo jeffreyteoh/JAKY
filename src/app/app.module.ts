@@ -8,6 +8,16 @@ import { ListPage } from '../pages/list/list';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import * as firebase from 'firebase';
+import { FIREBASE_CONFIG } from './firebase.credentials'
+import {SpinnerDialog} from "@ionic-native/spinner-dialog";
+
+try {
+  firebase.initializeApp(FIREBASE_CONFIG);
+}
+catch (e) {
+  console.log(e);
+}
 
 @NgModule({
   declarations: [
@@ -27,6 +37,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   ],
   providers: [
     StatusBar,
+    SpinnerDialog,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
