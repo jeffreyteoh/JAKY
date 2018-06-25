@@ -19,7 +19,11 @@
   "exclude": [
     "node_modules",
     "src/**/*.spec.ts",
-    "src/**/__tests__/*.ts"
+    "src/**/__tests__/*.ts",
+    "functions",
+    "platforms",
+    "plugins",
+    "resources"
   ],
   "compileOnSave": false,
   "atom": {

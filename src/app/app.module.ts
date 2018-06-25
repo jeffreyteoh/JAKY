@@ -8,9 +8,10 @@ import { ListPage } from '../pages/list/list';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { SpinnerDialog } from "@ionic-native/spinner-dialog";
+import { HttpClientModule } from '@angular/common/http';
 import * as firebase from 'firebase';
-import { FIREBASE_CONFIG } from './firebase.credentials'
-import {SpinnerDialog} from "@ionic-native/spinner-dialog";
+import { FIREBASE_CONFIG } from './firebase.credentials';
 
 try {
   firebase.initializeApp(FIREBASE_CONFIG);
@@ -28,6 +29,7 @@ catch (e) {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
