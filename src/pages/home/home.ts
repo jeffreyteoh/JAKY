@@ -106,7 +106,7 @@ export class HomePage {
     return this.http.post(this.url, {sessionid: this.sessionid, text: text},this.httpOptions)
       .pipe(catchError(this.handleError))
       .subscribe(data => {
-        console.log(data)2;
+        console.log(data);
         this.list.pop();
         this.addMessage(data.fulfillmentMessages[0].text.text[0], "bubble")
       });
