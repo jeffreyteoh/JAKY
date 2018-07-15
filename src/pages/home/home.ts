@@ -24,6 +24,9 @@ export class HomePage {
   url: string = "https://us-central1-jacky-bfdd4.cloudfunctions.net/helloWorld";
   // url: string = "http://httpbin.org/post";
   sessionid: string;
+  uid: any;
+  selectionExist: boolean;
+
   httpOptions : any ={
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
@@ -49,14 +52,12 @@ export class HomePage {
       if (user) {
         homepage.log('User detail: ', user);
         homepage.userName = user.displayName;
+        homepage.uid = user.uid;
         homepage.showWelcome = true;
-        homepage.list.push(
-          {
-            class: "bubble",
-            content: "Hi, " + user.displayName + "!"
-          }
-        );
+        homepage.addMessage("Hi, " + user.displayName + "!","bubble");
+        homepage.addselection();
         console.log("list", homepage.list);
+        console.log("uid", homepage.uid);
       }
       else {
         homepage.log("user not login");
@@ -73,18 +74,24 @@ export class HomePage {
     firebase.auth().signInWithRedirect(provider);
   }
 
-  sendMsg(): void {
+  sendMsg(type): void {
+    if (type) {
+      this.userText = type.name;
+      this.list.pop();
+    }
     this.addMessage(this.userText, "bubble-user");
     this.getIntent(this.userText);
   }
 
-  addMessage(msg, cls) {
+  addMessage(msg, cls , load?) {
     this.list.push(
       {
         class: cls,
-        content: msg
+        content: msg,
+        showLoad: load
       }
     );
+    console.log(this.list);
     this.scrollToTop();
   }
 
@@ -95,11 +102,13 @@ export class HomePage {
   }
 
   getIntent(text) {
+    this.addMessage("","bubble",true);
     return this.http.post(this.url, {sessionid: this.sessionid, text: text},this.httpOptions)
       .pipe(catchError(this.handleError))
       .subscribe(data => {
-        // console.log(data, data.fulfillmentText);
-        this.addMessage(data.fulfillmentText, "bubble")
+        console.log(data)2;
+        this.list.pop();
+        this.addMessage(data.fulfillmentMessages[0].text.text[0], "bubble")
       });
   }
 
@@ -111,6 +120,26 @@ export class HomePage {
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
+
+  checkUserDetails() {
+
+  }
+
+  addselection() {
+    let ctn = [
+      {
+        name: "Search for University",
+        func: "seachUni"
+      },
+      {
+        name: "Learn own interest",
+        func: "learnInterest"
+      }
+    ];
+    this.selectionExist = true;
+    this.addMessage(ctn,"selection");
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

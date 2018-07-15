@@ -26,52 +26,46 @@
   </div>
 
   <div *ngIf="showWelcome">
-    <ion-card class="bubble">
+    <div *ngFor="let li of list;">
+      <ion-card [ngClass]="li.class">
+        <ion-card-content>
+          <div *ngIf="li.class === 'selection';">
+            <ion-card-header>
+              What you want to do today?
+            </ion-card-header>
+            <div  *ngFor="let btn of li.content">
+              <div ion-item>
+                <button ion-button (click)="sendMsg(btn)">{{btn.name}}</button>
+              </div>
+            </div>
 
-      <!--<ion-card-header>-->
-      <!--</ion-card-header>-->
-      <ion-card-content>
-        Hi
-        <!-- Add card content here! -->
-      </ion-card-content>
+          </div>
 
-    </ion-card>
-    <ion-card class="bubble-user">
-      <ion-card-content>
-        Hi
-      </ion-card-content>
-    </ion-card>
-    <ion-card class="bubble-user">
-      <ion-card-content>
-        Hi
-      </ion-card-content>
-    </ion-card>
-    <ion-card class="bubble-user">
-      <ion-card-content>
-        Hi
-      </ion-card-content>
-    </ion-card>
-    <ion-card class="bubble-user">
-      <ion-card-content>
-        Hi
-      </ion-card-content>
-    </ion-card>
+          <ion-spinner name="dots" *ngIf="li.showLoad"></ion-spinner>
+
+          <div *ngIf="li.class !== 'selection'">
+              {{li.content}}
+            </div>
+          <!-- Add card content here! -->
+        </ion-card-content>
+      </ion-card>
+    </div>
   </div>
 </ion-content>
 
 <ion-footer>
   <ion-grid >
     <ion-row align-items-center>
-        <ion-col col-10>
-          <ion-item>
-            <ion-textarea [(ngModel)]="userText" rows="1"></ion-textarea>
-          </ion-item>
-        </ion-col>
-        <ion-col>
-          <button ion-button (click)="sendMsg()">
-            <ion-icon name="send" icon-end></ion-icon>
-          </button>
-        </ion-col>
+      <ion-col col-10>
+        <ion-item>
+          <ion-textarea [(ngModel)]="userText" rows="1"></ion-textarea>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <button ion-button (click)="sendMsg()">
+          <ion-icon name="send" icon-end></ion-icon>
+        </button>
+      </ion-col>
     </ion-row>
   </ion-grid>
 </ion-footer>
