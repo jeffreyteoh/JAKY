@@ -123,6 +123,10 @@ export class HomePage {
   }
 
   getIntent(text) {
+    this.userText = "";
+    if (text === "Anisah" || text === "Yuroshyni") {
+      text = "counselorChoosed";
+    }
     this.addMessage("","bubble",true);
     return this.http.post(this.url, {sessionid: this.sessionid, text: text},this.httpOptions)
       .pipe(catchError(this.handleError))
@@ -155,22 +159,40 @@ export class HomePage {
   }
 
   getCounselor() {
-    let db = firebase.database().ref('users/' + this.uid + "/CC");
+    let db = firebase.database();
+    let user = db.ref('users/' + this.uid + "/CC");
     let hp = this;
     // @ts-ignore
     console.log("uid: " + this.uid);
-
-    db.once('value', function (snap) {
+    this.addMessage("","bubble",true);
+    user.once('value', function (snap) {
       let profile = snap.val();
       console.log("profile:" + profile);
       if (profile === null) {
         console.log("No payment method");
+        hp.list.pop();
         hp.addMessage("Your account has no payment method yet. You need to setup payment profile first only allow to use this features.", "cls");
         hp.addMessage("Please enter your credit card number.", "cls");
         hp.saveData = "CC";
       }
       else {
-        hp.addMessage("Please select a psychiatrist below.", "cls");
+        db.ref('counselor').once('value').then((snap) => {
+          let ctn = [];
+          let couns = snap.val();
+          hp.list.pop();
+          hp.addMessage("Please select a psychiatrist below.", "cls");
+          Object.keys(snap.val()).forEach((counselorId)=>{
+            console.log(couns);
+            ctn.push({
+              name: couns[counselorId].name,
+              func: "counselorChoosed"
+            });
+          });
+          console.log(ctn);
+          hp.selectionExist = true;
+          hp.addMessage(ctn,"selection");
+        });
+
       }
       console.log(snap.val());
     });
