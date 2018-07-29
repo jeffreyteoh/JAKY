@@ -26,6 +26,8 @@ export class HomePage {
   sessionid: string;
   uid: any;
   selectionExist: boolean;
+  saveData: any;
+  CC : any = [];
 
   httpOptions : any ={
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -69,16 +71,35 @@ export class HomePage {
 
   googleLogin():void {
     let provider = new firebase.auth.GoogleAuthProvider();
-    this.log("Google Login");
+    console.log("Google Login");
     provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
     firebase.auth().signInWithRedirect(provider);
   }
 
   sendMsg(type): void {
+    console.log("data", this.saveData);
+    if (this.saveData) {
+      switch (this.saveData) {
+        case "CC":
+          this.CC.push(this.userText);
+          this.addMessage(this.userText, "bubble-user");
+          if (this.CC.length > 1) {
+            firebase.database().ref("users/" + this.uid + "/CC").set({
+              no : this.CC[0],
+              cvv: this.CC[1]
+            });
+            this.saveData = null;
+          }
+          else {
+            this.addCC();
+          }
+          return;
+      }
+    }
     if (type) {
       this.userText = type.name;
-      this.list.pop();
     }
+    this.removeSelection();
     this.addMessage(this.userText, "bubble-user");
     this.getIntent(this.userText);
   }
@@ -107,8 +128,20 @@ export class HomePage {
       .pipe(catchError(this.handleError))
       .subscribe(data => {
         console.log(data);
+        console.log("intent: " + data.intent.displayName);
         this.list.pop();
-        this.addMessage(data.fulfillmentMessages[0].text.text[0], "bubble")
+        this.addMessage(data.fulfillmentMessages[0].text.text[0], "bubble");
+        switch (data.intent.displayName) {
+          case 'searchCourse':
+            this.searchCourse();
+            break;
+          case "learnInterest":
+            break;
+          case "getCounselor":
+            this.getCounselor();
+            break;
+          default:
+        }
       });
   }
 
@@ -121,25 +154,75 @@ export class HomePage {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  checkUserDetails() {
+  getCounselor() {
+    let db = firebase.database().ref('users/' + this.uid + "/CC");
+    let hp = this;
+    // @ts-ignore
+    console.log("uid: " + this.uid);
 
+    db.once('value', function (snap) {
+      let profile = snap.val();
+      console.log("profile:" + profile);
+      if (profile === null) {
+        console.log("No payment method");
+        hp.addMessage("Your account has no payment method yet. You need to setup payment profile first only allow to use this features.", "cls");
+        hp.addMessage("Please enter your credit card number.", "cls");
+        hp.saveData = "CC";
+      }
+      else {
+        hp.addMessage("Please select a psychiatrist below.", "cls");
+      }
+      console.log(snap.val());
+    });
+  }
+
+  addCC() {
+    this.addMessage("Please enter your CVV.", "cls");
+  }
+
+  removeSelection() {
+    this.list.forEach((li, index)=> {
+      console.log(li);
+      if (li.class === "selection") {
+        this.list.splice(index,1);
+      }
+    });
   }
 
   addselection() {
     let ctn = [
       {
-        name: "Search for University",
-        func: "seachUni"
+        name: "Search for Courses",
+        func: "searchCourse"
       },
       {
         name: "Learn own interest",
         func: "learnInterest"
+      }
+      , {
+        name: "Book a counselor",
+        func: "bookCounselor"
       }
     ];
     this.selectionExist = true;
     this.addMessage(ctn,"selection");
   }
 
+  searchCourse() {
+    let ctn = [
+      {
+        name: "Based on traits",
+        func: "traitsTest"
+      },
+      {
+        name: "Based on interest",
+        func: "interestSearch"
+      }
+    ];
+    this.selectionExist = true;
+    this.addMessage(ctn,"selection");
+    console.log("bye");
+  }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
