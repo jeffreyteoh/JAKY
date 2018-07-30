@@ -28,6 +28,7 @@ export class HomePage {
   selectionExist: boolean;
   saveData: any;
   CC : any = [];
+  personTest: boolean = false;
 
   httpOptions : any ={
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -89,6 +90,7 @@ export class HomePage {
               cvv: this.CC[1]
             });
             this.saveData = null;
+            this.getCounselor();
           }
           else {
             this.addCC();
@@ -124,29 +126,45 @@ export class HomePage {
 
   getIntent(text) {
     this.userText = "";
+
+    this.addMessage("","bubble",true);
+
     if (text === "Anisah" || text === "Yuroshyni") {
       text = "counselorChoosed";
     }
-    this.addMessage("","bubble",true);
-    return this.http.post(this.url, {sessionid: this.sessionid, text: text},this.httpOptions)
-      .pipe(catchError(this.handleError))
-      .subscribe(data => {
-        console.log(data);
-        console.log("intent: " + data.intent.displayName);
-        this.list.pop();
-        this.addMessage(data.fulfillmentMessages[0].text.text[0], "bubble");
-        switch (data.intent.displayName) {
-          case 'searchCourse':
-            this.searchCourse();
-            break;
-          case "learnInterest":
-            break;
-          case "getCounselor":
-            this.getCounselor();
-            break;
-          default:
-        }
+    if(this.personTest === true) {
+      this.personTest = false;
+      this.addselection();
+      return firebase.database().ref('users/' + this.uid).set({
+        trait: text
       });
+    }
+    return this.http.post(this.url, {sessionid: this.sessionid, text: text},this.httpOptions)
+    .pipe(catchError(this.handleError))
+    .subscribe(data => {
+      console.log(data);
+      console.log("intent: " + data.intent.displayName);
+      this.list.pop();
+      this.addMessage(data.fulfillmentMessages[0].text.text[0], "bubble");
+      switch (data.intent.displayName) {
+        case 'searchCourse':
+          this.searchCourse();
+          break;
+        case "learnInterest":
+          this.learnInterest();
+          break;
+        case "getCounselor":
+          this.getCounselor();
+          break;
+        default:
+      }
+    });
+  }
+
+  learnInterest() {
+    this.addMessage("Please do a test in the following link: https://www.truity.com/test/career-personality-profiler-test","cls");
+    this.addMessage("Enter your type of personalitys:","cls");
+    this.personTest = true;
   }
 
   guid() {
