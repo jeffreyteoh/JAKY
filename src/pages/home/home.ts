@@ -156,7 +156,35 @@ export class HomePage {
         case "getCounselor":
           this.getCounselor();
           break;
+        case "traitSearch":
+          console.log('traitSearch');
+          this.traitSearch();
+          break;
         default:
+      }
+    });
+  }
+
+  traitSearch() {
+    let db = firebase.database();
+    let hp = this;
+
+    db.ref('users/' + this.uid + '/traits').once('value').then((snap) => {
+      let trait = snap.val();
+      console.log(trait);
+      if (trait) {
+        db.ref('traits').once('value').then((snap) => {
+          let t = snap.val();
+          if (t) {
+
+          } else {
+            hp.addMessage("Your traits is great but currently we do not have any information about it. Please try again later.", 'cls');
+            hp.addselection();
+          }
+        });
+      }
+      else {
+        hp.learnInterest();
       }
     });
   }
