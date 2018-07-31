@@ -189,14 +189,15 @@ export class HomePage {
             t.career.forEach((name) => {
               career += "<li>" + name + "</li>";
             });
-            // t.course.forEach(()=> {
-            //
-            // });'
-            // console.log(career);
+            t.course.forEach((val)=> {
+               courses += "<li>" + val.name + " - "+ val.uni + "</li>";
+            });
+            courses += "</ol>";
             career += "</ol>";
             hp.list.pop();
             hp.addMessage("Wow! You are a " + t.description, "cls");
             hp.addMessage(career,"cls");
+            hp.addMessage(courses, "cls");
             hp.addselection();
           } else {
             hp.list.pop();
