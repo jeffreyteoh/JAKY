@@ -78,6 +78,9 @@ export class HomePage {
   }
 
   sendMsg(type): void {
+    // if(!this.userText) {
+    //   return;
+    // }
     console.log("data", this.saveData);
     if (this.saveData) {
       switch (this.saveData) {
@@ -85,7 +88,7 @@ export class HomePage {
           this.CC.push(this.userText);
           this.addMessage(this.userText, "bubble-user");
           if (this.CC.length > 1) {
-            firebase.database().ref("users/" + this.uid + "/CC").set({
+            firebase.database().ref("users/" + this.uid + "/CC").update({
               no : this.CC[0],
               cvv: this.CC[1]
             });
@@ -126,18 +129,16 @@ export class HomePage {
 
   getIntent(text) {
     this.userText = "";
-
     this.addMessage("","bubble",true);
-
-    if (text === "Anisah" || text === "Yuroshyni") {
+    if (text === "Anisah" || text === "Yuroshyini") {
       text = "counselorChoosed";
     }
     if(this.personTest === true) {
       this.personTest = false;
-      this.addselection();
-      return firebase.database().ref('users/' + this.uid).set({
+       firebase.database().ref('users/' + this.uid).update({
         trait: text
       });
+       text = "traitsChoosed";
     }
     return this.http.post(this.url, {sessionid: this.sessionid, text: text},this.httpOptions)
     .pipe(catchError(this.handleError))
@@ -146,38 +147,59 @@ export class HomePage {
       console.log("intent: " + data.intent.displayName);
       this.list.pop();
       this.addMessage(data.fulfillmentMessages[0].text.text[0], "bubble");
+     console.log("what happen!!!!");
       switch (data.intent.displayName) {
         case 'searchCourse':
-          this.searchCourse();
-          break;
+          this.searchCourse();break;
         case "learnInterest":
-          this.learnInterest();
-          break;
+          this.learnInterest(); break;
         case "getCounselor":
-          this.getCounselor();
-          break;
+          this.getCounselor();break;
         case "traitSearch":
-          console.log('traitSearch');
           this.traitSearch();
           break;
-        default:
+        case "counselorChoosed":
+          this.addselection();
+          break;
+        case "traitSelected":
+          this.traitSelected();
+          break;
       }
     });
+  }
+
+  traitSelected() {
+
   }
 
   traitSearch() {
     let db = firebase.database();
     let hp = this;
-
-    db.ref('users/' + this.uid + '/traits').once('value').then((snap) => {
+    this.addMessage("","bubble",true);
+    db.ref('users/' + this.uid + '/trait').once('value').then((snap) => {
       let trait = snap.val();
       console.log(trait);
       if (trait) {
-        db.ref('traits').once('value').then((snap) => {
+        db.ref('traits/' + trait).once('value').then((snap) => {
           let t = snap.val();
+          console.log(t);
           if (t) {
-
+            let career = "Your suitable career is : <br><ol>";
+            let courses = "This is the course that we recommend: <br> <ol>";
+            t.career.forEach((name) => {
+              career += "<li>" + name + "</li>";
+            });
+            // t.course.forEach(()=> {
+            //
+            // });'
+            // console.log(career);
+            career += "</ol>";
+            hp.list.pop();
+            hp.addMessage("Wow! You are a " + t.description, "cls");
+            hp.addMessage(career,"cls");
+            hp.addselection();
           } else {
+            hp.list.pop();
             hp.addMessage("Your traits is great but currently we do not have any information about it. Please try again later.", 'cls');
             hp.addselection();
           }
@@ -190,8 +212,9 @@ export class HomePage {
   }
 
   learnInterest() {
+    console.log("hi");
     this.addMessage("Please do a test in the following link: https://www.truity.com/test/career-personality-profiler-test","cls");
-    this.addMessage("Enter your type of personalitys:","cls");
+    this.addMessage("Enter your type of personality:","cls");
     this.personTest = true;
   }
 

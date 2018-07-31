@@ -44,8 +44,8 @@
           <ion-spinner name="dots" *ngIf="li.showLoad"></ion-spinner>
 
           <div *ngIf="li.class !== 'selection'">
-              {{li.content}}
-            </div>
+            <span [innerHtml]="li.content"> </span>
+          </div>
           <!-- Add card content here! -->
         </ion-card-content>
       </ion-card>
