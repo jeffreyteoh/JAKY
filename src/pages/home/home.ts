@@ -29,6 +29,7 @@ export class HomePage {
   saveData: any;
   CC : any = [];
   personTest: boolean = false;
+  interestSearch: boolean =false;
 
   httpOptions : any ={
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -143,11 +144,32 @@ export class HomePage {
     return this.http.post(this.url, {sessionid: this.sessionid, text: text},this.httpOptions)
     .pipe(catchError(this.handleError))
     .subscribe(data => {
-      console.log(data);
-      console.log("intent: " + data.intent.displayName);
+      let intentName = data.intent.displayName;
+      console.log(data, "intent: " + intentName);
       this.list.pop();
       this.addMessage(data.fulfillmentMessages[0].text.text[0], "bubble");
-     console.log("what happen!!!!");
+      if(this.interestSearch) {
+        if (intentName.indexOf('-')) {
+          firebase.database().ref('interest/' + intentName.split('-')[1]).once('value').then((snap) => {
+            let d = snap.val();
+            if (d) {
+              let courses = "This is the course that we recommend: <br> <ol>";
+              d.forEach((val) => {
+                courses += "<li>" + val.course + " - "+ val.uni + "</li>";
+              });
+              courses += "</ol>";
+              this.addMessage(courses, "cls");
+              this.addselection();
+            }
+            else {
+              this.addMessage("😭", "cls");
+            }
+          });
+        }
+        this.interestSearch= false;
+      }
+
+
       switch (data.intent.displayName) {
         case 'searchCourse':
           this.searchCourse();break;
@@ -164,12 +186,16 @@ export class HomePage {
         case "traitSelected":
           this.traitSelected();
           break;
+        case "interestSearch":
+          this.interestSearch = true;
+          break;
       }
     });
   }
 
-  traitSelected() {
 
+  traitSelected() {
+    this.traitSearch();
   }
 
   traitSearch() {
