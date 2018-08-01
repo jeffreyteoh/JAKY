@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import * as firebase from "firebase";
+import {ListPage} from "../pages/list/list";
 
 @Component({
   templateUrl: 'app.html'
@@ -12,7 +13,7 @@ import * as firebase from "firebase";
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
   UserName : string = window.sessionStorage.getItem('UserName');
-  rootPage: any = HomePage;
+  rootPage: any = ListPage;
   pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
@@ -20,6 +21,7 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
+      { title: 'Home', component: ListPage},
       { title: 'Login', component: HomePage },
       { title: 'Logout', component: HomePage }
       ];

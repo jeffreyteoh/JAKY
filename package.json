@@ -32,8 +32,13 @@
     "cordova-android": "^7.1.1",
     "cordova-browser": "^5.0.3",
     "cordova-ios": "^4.5.5",
+    "cordova-plugin-browsertab": "^0.2.0",
+    "cordova-plugin-buildinfo": "^2.0.1",
+    "cordova-plugin-compat": "^1.2.0",
+    "cordova-plugin-customurlscheme": "^4.3.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-firebase": "^1.0.5",
+    "cordova-plugin-inappbrowser": "^3.0.0",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.1.19",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -59,7 +64,16 @@
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-firebase": {},
-      "cordova-universal-links-plugin": {}
+      "cordova-universal-links-plugin": {},
+      "cordova-plugin-buildinfo": {},
+      "cordova-plugin-inappbrowser": {},
+      "cordova-plugin-browsertab": {},
+      "cordova-plugin-customurlscheme": {
+        "URL_SCHEME": "com.chatbot.jacky",
+        "ANDROID_SCHEME": " ",
+        "ANDROID_HOST": " ",
+        "ANDROID_PATHPREFIX": "/"
+      }
     },
     "platforms": [
       "browser",
