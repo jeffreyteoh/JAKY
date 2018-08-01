@@ -48,10 +48,9 @@ export class HomePage {
   }
 
   checkLoggedIn() {
-    let loading = this.loadingCtrl.create({});
+    // let loading = this.loadingCtrl.create({});
     let homepage = this;
 
-    loading.present();
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         homepage.log('User detail: ', user);
@@ -67,7 +66,6 @@ export class HomePage {
         homepage.log("user not login");
         homepage.showLogin = true;
       }
-      loading.dismissAll();
     });
   }
 
