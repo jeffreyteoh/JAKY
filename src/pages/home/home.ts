@@ -238,8 +238,8 @@ export class HomePage {
 
   learnInterest() {
     console.log("hi");
-    this.addMessage("Please do a test in the following link: https://www.truity.com/test/career-personality-profiler-test","cls");
-    this.addMessage("Enter your type of personality:","cls");
+    this.addMessage("Please do a test in the following link:" + "<a href=\"https://www.truity.com/test/career-personality-profiler-test\" target='_blank'>Click here</a>","cls");
+    this.addMessage("Enter your type of personality (ESTJ, INFP, INTJ. INFJ,INTP, ENFP,ENTJ,ENTP,ENTJ,ISFJ,ISFP,ISTJ,ISTP,ESFJ,ESFP,ESTP):","cls");
     this.personTest = true;
   }
 
